@@ -1,3 +1,21 @@
+# TodoMVC React
+
+## Docker
+
+### `docker-compose up`
+Runs the app in the development mode
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+### `docker-compose run --rm todomvc-front-app npm test`
+Launches the test runner in the interactive watch mode.<br />
+
+### `docker-compose -f docker-compose-nginx.yml up`
+Runs the app in the production mode
+Open [http://localhost](http://localhost) to view it in the browser.
+
+
+# React Create App
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
