@@ -13,6 +13,13 @@ Launches the test runner in the interactive watch mode.<br />
 Runs the app in the production mode
 Open [http://localhost](http://localhost) to view it in the browser.
 
+## Cypress with Docker
+
+### `docker-compose -f docker-compose.yml -f cypress/docker-compose-cypress.yml up --exit-code-from cypress`
+Runs Cypress e2e tests
+
+### `docker-compose -f docker-compose.yml -f cypress/docker-compose-cypress.yml -f cypress/docker-compose-cypress-open.yml up`
+Opens Cypress Test Runner
 
 # React Create App
 
