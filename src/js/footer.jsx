@@ -1,12 +1,11 @@
-import React from 'react';
-import createReactClass from 'create-react-class';
+import React, { Component } from 'react';
 import classNames from 'classnames';
 
 import Utils from './utils';
 import * as types from './constants';
 
-var TodoFooter = createReactClass({
-  render: function () {
+class TodoFooter extends Component {
+  render() {
     var activeTodoWord = Utils.pluralize(this.props.count, 'item');
     var clearButton = null;
 
@@ -62,7 +61,7 @@ var TodoFooter = createReactClass({
         {clearButton}
       </footer>
     );
-  },
-});
+  }
+}
 
 export default TodoFooter;

@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 
 import * as types from './constants';
 
-var TodoItem = createReactClass({
-  handleSubmit: function (event) {
+class TodoItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      editText: props.todo.title,
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleSubmit(event) {
     var val = this.state.editText.trim();
     if (val) {
       this.props.onSave(val);
@@ -14,31 +26,27 @@ var TodoItem = createReactClass({
     } else {
       this.props.onDestroy();
     }
-  },
+  }
 
-  handleEdit: function () {
+  handleEdit() {
     this.props.onEdit();
     this.setState({ editText: this.props.todo.title });
-  },
+  }
 
-  handleKeyDown: function (event) {
+  handleKeyDown(event) {
     if (event.which === types.ESCAPE_KEY) {
       this.setState({ editText: this.props.todo.title });
       this.props.onCancel(event);
     } else if (event.which === types.ENTER_KEY) {
       this.handleSubmit(event);
     }
-  },
+  }
 
-  handleChange: function (event) {
+  handleChange(event) {
     if (this.props.editing) {
       this.setState({ editText: event.target.value });
     }
-  },
-
-  getInitialState: function () {
-    return { editText: this.props.todo.title };
-  },
+  }
 
   /**
    * This is a completely optional performance enhancement that you can
@@ -47,13 +55,13 @@ var TodoItem = createReactClass({
    * just use it as an example of how little code it takes to get an order
    * of magnitude performance improvement.
    */
-  shouldComponentUpdate: function (nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return (
       nextProps.todo !== this.props.todo ||
       nextProps.editing !== this.props.editing ||
       nextState.editText !== this.state.editText
     );
-  },
+  }
 
   /**
    * Safely manipulate the DOM after updating the state when invoking
@@ -61,15 +69,15 @@ var TodoItem = createReactClass({
    * For more info refer to notes at https://facebook.github.io/react/docs/component-api.html#setstate
    * and https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate
    */
-  componentDidUpdate: function (prevProps) {
+  componentDidUpdate(prevProps) {
     if (!prevProps.editing && this.props.editing) {
       var node = ReactDOM.findDOMNode(this.refs.editField);
       node.focus();
       node.setSelectionRange(node.value.length, node.value.length);
     }
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <li
         className={classNames({
@@ -97,7 +105,7 @@ var TodoItem = createReactClass({
         />
       </li>
     );
-  },
-});
+  }
+}
 
 export default TodoItem;

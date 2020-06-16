@@ -1,22 +1,33 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Router } from 'director/build/director';
-import createReactClass from 'create-react-class';
 import 'todomvc-app-css/index.css';
 
 import TodoItem from './todoItem';
 import TodoFooter from './footer';
 import * as types from './constants';
 
-var TodoApp = createReactClass({
-  getInitialState: function () {
-    return {
+class TodoApp extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       nowShowing: types.ALL_TODOS,
       editing: null,
       newTodo: '',
     };
-  },
 
-  componentDidMount: function () {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleNewTodoKeyDown = this.handleNewTodoKeyDown.bind(this);
+    this.toggleAll = this.toggleAll.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.destroy = this.destroy.bind(this);
+    this.edit = this.edit.bind(this);
+    this.save = this.save.bind(this);
+    this.cancel = this.cancel.bind(this);
+    this.clearCompleted = this.clearCompleted.bind(this);
+  }
+
+  componentDidMount() {
     var setState = this.setState;
     var router = Router({
       '/': setState.bind(this, { nowShowing: types.ALL_TODOS }),
@@ -24,13 +35,13 @@ var TodoApp = createReactClass({
       '/completed': setState.bind(this, { nowShowing: types.COMPLETED_TODOS }),
     });
     router.init('/');
-  },
+  }
 
-  handleChange: function (event) {
+  handleChange(event) {
     this.setState({ newTodo: event.target.value });
-  },
+  }
 
-  handleNewTodoKeyDown: function (event) {
+  handleNewTodoKeyDown(event) {
     if (event.keyCode !== types.ENTER_KEY) {
       return;
     }
@@ -43,39 +54,39 @@ var TodoApp = createReactClass({
       this.props.model.addTodo(val);
       this.setState({ newTodo: '' });
     }
-  },
+  }
 
-  toggleAll: function (event) {
+  toggleAll(event) {
     var checked = event.target.checked;
     this.props.model.toggleAll(checked);
-  },
+  }
 
-  toggle: function (todoToToggle) {
+  toggle(todoToToggle) {
     this.props.model.toggle(todoToToggle);
-  },
+  }
 
-  destroy: function (todo) {
+  destroy(todo) {
     this.props.model.destroy(todo);
-  },
+  }
 
-  edit: function (todo) {
+  edit(todo) {
     this.setState({ editing: todo.id });
-  },
+  }
 
-  save: function (todoToSave, text) {
+  save(todoToSave, text) {
     this.props.model.save(todoToSave, text);
     this.setState({ editing: null });
-  },
+  }
 
-  cancel: function () {
+  cancel() {
     this.setState({ editing: null });
-  },
+  }
 
-  clearCompleted: function () {
+  clearCompleted() {
     this.props.model.clearCompleted();
-  },
+  }
 
-  render: function () {
+  render() {
     var footer;
     var main;
     var todos = this.props.model.todos;
@@ -158,7 +169,7 @@ var TodoApp = createReactClass({
         </div>
       </section>
     );
-  },
-});
+  }
+}
 
 export default TodoApp;
