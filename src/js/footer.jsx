@@ -14,7 +14,8 @@ var TodoFooter = createReactClass({
       clearButton = (
         <button
           className="clear-completed"
-          onClick={this.props.onClearCompleted}>
+          onClick={this.props.onClearCompleted}
+        >
           Clear completed
         </button>
       );
@@ -30,23 +31,30 @@ var TodoFooter = createReactClass({
           <li>
             <a
               href="#/"
-              className={classNames({selected: nowShowing === types.ALL_TODOS})}>
+              className={classNames({
+                selected: nowShowing === types.ALL_TODOS,
+              })}
+            >
               All
             </a>
-          </li>
-          {' '}
+          </li>{' '}
           <li>
             <a
               href="#/active"
-              className={classNames({selected: nowShowing === types.ACTIVE_TODOS})}>
+              className={classNames({
+                selected: nowShowing === types.ACTIVE_TODOS,
+              })}
+            >
               Active
             </a>
-          </li>
-          {' '}
+          </li>{' '}
           <li>
             <a
               href="#/completed"
-              className={classNames({selected: nowShowing === types.COMPLETED_TODOS})}>
+              className={classNames({
+                selected: nowShowing === types.COMPLETED_TODOS,
+              })}
+            >
               Completed
             </a>
           </li>
@@ -54,7 +62,7 @@ var TodoFooter = createReactClass({
         {clearButton}
       </footer>
     );
-  }
+  },
 });
 
 export default TodoFooter;

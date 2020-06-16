@@ -12,22 +12,22 @@ var TodoApp = createReactClass({
     return {
       nowShowing: types.ALL_TODOS,
       editing: null,
-      newTodo: ''
+      newTodo: '',
     };
   },
 
   componentDidMount: function () {
     var setState = this.setState;
     var router = Router({
-      '/': setState.bind(this, {nowShowing: types.ALL_TODOS}),
-      '/active': setState.bind(this, {nowShowing: types.ACTIVE_TODOS}),
-      '/completed': setState.bind(this, {nowShowing: types.COMPLETED_TODOS})
+      '/': setState.bind(this, { nowShowing: types.ALL_TODOS }),
+      '/active': setState.bind(this, { nowShowing: types.ACTIVE_TODOS }),
+      '/completed': setState.bind(this, { nowShowing: types.COMPLETED_TODOS }),
     });
     router.init('/');
   },
 
   handleChange: function (event) {
-    this.setState({newTodo: event.target.value});
+    this.setState({ newTodo: event.target.value });
   },
 
   handleNewTodoKeyDown: function (event) {
@@ -41,7 +41,7 @@ var TodoApp = createReactClass({
 
     if (val) {
       this.props.model.addTodo(val);
-      this.setState({newTodo: ''});
+      this.setState({ newTodo: '' });
     }
   },
 
@@ -59,16 +59,16 @@ var TodoApp = createReactClass({
   },
 
   edit: function (todo) {
-    this.setState({editing: todo.id});
+    this.setState({ editing: todo.id });
   },
 
   save: function (todoToSave, text) {
     this.props.model.save(todoToSave, text);
-    this.setState({editing: null});
+    this.setState({ editing: null });
   },
 
   cancel: function () {
-    this.setState({editing: null});
+    this.setState({ editing: null });
   },
 
   clearCompleted: function () {
@@ -113,13 +113,14 @@ var TodoApp = createReactClass({
     var completedCount = todos.length - activeTodoCount;
 
     if (activeTodoCount || completedCount) {
-      footer =
+      footer = (
         <TodoFooter
           count={activeTodoCount}
           completedCount={completedCount}
           nowShowing={this.state.nowShowing}
           onClearCompleted={this.clearCompleted}
-        />;
+        />
+      );
     }
 
     if (todos.length) {
@@ -132,12 +133,8 @@ var TodoApp = createReactClass({
             onChange={this.toggleAll}
             checked={activeTodoCount === 0}
           />
-          <label
-            htmlFor="toggle-all"
-          />
-          <ul className="todo-list">
-            {todoItems}
-          </ul>
+          <label htmlFor="toggle-all" />
+          <ul className="todo-list">{todoItems}</ul>
         </section>
       );
     }
@@ -161,8 +158,7 @@ var TodoApp = createReactClass({
         </div>
       </section>
     );
-  }
+  },
 });
 
 export default TodoApp;
-

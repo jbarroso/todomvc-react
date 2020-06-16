@@ -10,7 +10,7 @@ const model = new TodoModel('react-todos');
 function render() {
   ReactDOM.render(
     //<React.StrictMode>
-        <TodoApp model={model}/>,
+    <TodoApp model={model} />,
     //</React.StrictMode>,
     document.getElementById('root')
   );

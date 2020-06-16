@@ -10,7 +10,7 @@ var TodoItem = createReactClass({
     var val = this.state.editText.trim();
     if (val) {
       this.props.onSave(val);
-      this.setState({editText: val});
+      this.setState({ editText: val });
     } else {
       this.props.onDestroy();
     }
@@ -18,12 +18,12 @@ var TodoItem = createReactClass({
 
   handleEdit: function () {
     this.props.onEdit();
-    this.setState({editText: this.props.todo.title});
+    this.setState({ editText: this.props.todo.title });
   },
 
   handleKeyDown: function (event) {
     if (event.which === types.ESCAPE_KEY) {
-      this.setState({editText: this.props.todo.title});
+      this.setState({ editText: this.props.todo.title });
       this.props.onCancel(event);
     } else if (event.which === types.ENTER_KEY) {
       this.handleSubmit(event);
@@ -32,12 +32,12 @@ var TodoItem = createReactClass({
 
   handleChange: function (event) {
     if (this.props.editing) {
-      this.setState({editText: event.target.value});
+      this.setState({ editText: event.target.value });
     }
   },
 
   getInitialState: function () {
-    return {editText: this.props.todo.title};
+    return { editText: this.props.todo.title };
   },
 
   /**
@@ -71,10 +71,12 @@ var TodoItem = createReactClass({
 
   render: function () {
     return (
-      <li className={classNames({
-        completed: this.props.todo.completed,
-        editing: this.props.editing
-      })}>
+      <li
+        className={classNames({
+          completed: this.props.todo.completed,
+          editing: this.props.editing,
+        })}
+      >
         <div className="view">
           <input
             className="toggle"
@@ -82,9 +84,7 @@ var TodoItem = createReactClass({
             checked={this.props.todo.completed}
             onChange={this.props.onToggle}
           />
-          <label onDoubleClick={this.handleEdit}>
-            {this.props.todo.title}
-          </label>
+          <label onDoubleClick={this.handleEdit}>{this.props.todo.title}</label>
           <button className="destroy" onClick={this.props.onDestroy} />
         </div>
         <input
@@ -97,7 +97,7 @@ var TodoItem = createReactClass({
         />
       </li>
     );
-  }
+  },
 });
 
 export default TodoItem;
