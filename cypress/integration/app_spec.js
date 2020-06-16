@@ -59,7 +59,7 @@ describe('TodoMVC - React', function () {
     .type('learn testing{enter}')
     .type('be cool{enter}')
 
-    cy.get('.todo-list li').should('have.length', 3)
+    cy.get('.todo-list li').should('have.length', 2)
   })
 
   context('When page is initially opened', function () {
