@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import { Router } from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
@@ -28,8 +30,8 @@ class TodoApp extends Component {
   }
 
   componentDidMount() {
-    var setState = this.setState;
-    var router = Router({
+    const { setState } = this;
+    const router = Router({
       '/': setState.bind(this, { nowShowing: types.ALL_TODOS }),
       '/active': setState.bind(this, { nowShowing: types.ACTIVE_TODOS }),
       '/completed': setState.bind(this, { nowShowing: types.COMPLETED_TODOS }),
@@ -48,25 +50,31 @@ class TodoApp extends Component {
 
     event.preventDefault();
 
-    var val = this.state.newTodo.trim();
+    const { newTodo } = this.state;
+    const { model } = this.props;
+
+    const val = newTodo.trim();
 
     if (val) {
-      this.props.model.addTodo(val);
+      model.addTodo(val);
       this.setState({ newTodo: '' });
     }
   }
 
   toggleAll(event) {
-    var checked = event.target.checked;
-    this.props.model.toggleAll(checked);
+    const { checked } = event.target;
+    const { model } = this.props;
+    model.toggleAll(checked);
   }
 
   toggle(todoToToggle) {
-    this.props.model.toggle(todoToToggle);
+    const { model } = this.props;
+    model.toggle(todoToToggle);
   }
 
   destroy(todo) {
-    this.props.model.destroy(todo);
+    const { model } = this.props;
+    model.destroy(todo);
   }
 
   edit(todo) {
@@ -74,7 +82,8 @@ class TodoApp extends Component {
   }
 
   save(todoToSave, text) {
-    this.props.model.save(todoToSave, text);
+    const { model } = this.props;
+    model.save(todoToSave, text);
     this.setState({ editing: null });
   }
 
@@ -83,16 +92,19 @@ class TodoApp extends Component {
   }
 
   clearCompleted() {
-    this.props.model.clearCompleted();
+    const { model } = this.props;
+    model.clearCompleted();
   }
 
   render() {
-    var footer;
-    var main;
-    var todos = this.props.model.todos;
+    let footer;
+    let main;
+    const { model } = this.props;
+    const { todos } = model;
+    const { nowShowing, editing, newTodo } = this.state;
 
-    var shownTodos = todos.filter(function (todo) {
-      switch (this.state.nowShowing) {
+    const shownTodos = todos.filter((todo) => {
+      switch (nowShowing) {
         case types.ACTIVE_TODOS:
           return !todo.completed;
         case types.COMPLETED_TODOS:
@@ -100,35 +112,36 @@ class TodoApp extends Component {
         default:
           return true;
       }
-    }, this);
+    });
 
-    var todoItems = shownTodos.map(function (todo) {
+    const todoItems = shownTodos.map((todo) => {
       return (
         <TodoItem
           key={todo.id}
           todo={todo}
-          onToggle={this.toggle.bind(this, todo)}
-          onDestroy={this.destroy.bind(this, todo)}
-          onEdit={this.edit.bind(this, todo)}
-          editing={this.state.editing === todo.id}
-          onSave={this.save.bind(this, todo)}
+          onToggle={this.toggle}
+          onDestroy={this.destroy}
+          onEdit={this.edit}
+          editing={editing === todo.id}
+          onSave={this.save}
           onCancel={this.cancel}
         />
       );
-    }, this);
+    });
 
-    var activeTodoCount = todos.reduce(function (accum, todo) {
-      return todo.completed ? accum : accum + 1;
-    }, 0);
+    const activeTodoCount = todos.reduce(
+      (accum, todo) => (todo.completed ? accum : accum + 1),
+      0
+    );
 
-    var completedCount = todos.length - activeTodoCount;
+    const completedCount = todos.length - activeTodoCount;
 
     if (activeTodoCount || completedCount) {
       footer = (
         <TodoFooter
           count={activeTodoCount}
           completedCount={completedCount}
-          nowShowing={this.state.nowShowing}
+          nowShowing={nowShowing}
           onClearCompleted={this.clearCompleted}
         />
       );
@@ -139,6 +152,7 @@ class TodoApp extends Component {
         <section className="main">
           <input
             id="toggle-all"
+            name="toggle-all"
             className="toggle-all"
             type="checkbox"
             onChange={this.toggleAll}
@@ -158,10 +172,10 @@ class TodoApp extends Component {
             <input
               className="new-todo"
               placeholder="What needs to be done?"
-              value={this.state.newTodo}
+              value={newTodo}
               onKeyDown={this.handleNewTodoKeyDown}
               onChange={this.handleChange}
-              autoFocus={true}
+              autoFocus
             />
           </header>
           {main}
@@ -171,5 +185,17 @@ class TodoApp extends Component {
     );
   }
 }
+
+TodoApp.propTypes = {
+  model: PropTypes.shape({
+    addTodo: PropTypes.func.isRequired,
+    toggleAll: PropTypes.func.isRequired,
+    toggle: PropTypes.func.isRequired,
+    destroy: PropTypes.func.isRequired,
+    save: PropTypes.func.isRequired,
+    clearCompleted: PropTypes.func.isRequired,
+    todos: PropTypes.array.isRequired,
+  }).isRequired,
+};
 
 export default TodoApp;

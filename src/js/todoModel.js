@@ -18,15 +18,13 @@ class TodoModel {
 
   inform() {
     Utils.store(this.key, this.todos);
-    this.onChanges.forEach(function (cb) {
-      cb();
-    });
+    this.onChanges.forEach((cb) => cb());
   }
 
   addTodo(title) {
     this.todos = this.todos.concat({
       id: Utils.uuid(),
-      title: title,
+      title,
       completed: false,
     });
 
@@ -38,45 +36,35 @@ class TodoModel {
     // easier to reason about and React works very well with them. That's why
     // we use map() and filter() everywhere instead of mutating the array or
     // todo items themselves.
-    this.todos = this.todos.map(function (todo) {
-      return Utils.extend({}, todo, { completed: checked });
-    });
+    this.todos = this.todos.map((todo) => ({ ...todo, completed: checked }));
 
     this.inform();
   }
 
   toggle(todoToToggle) {
-    this.todos = this.todos.map(function (todo) {
-      return todo !== todoToToggle
-        ? todo
-        : Utils.extend({}, todo, { completed: !todo.completed });
-    });
+    this.todos = this.todos.map((todo) =>
+      todo !== todoToToggle ? todo : { ...todo, completed: !todo.completed }
+    );
 
     this.inform();
   }
 
   destroy(todo) {
-    this.todos = this.todos.filter(function (candidate) {
-      return candidate !== todo;
-    });
+    this.todos = this.todos.filter((candidate) => candidate !== todo);
 
     this.inform();
   }
 
   save(todoToSave, text) {
-    this.todos = this.todos.map(function (todo) {
-      return todo !== todoToSave
-        ? todo
-        : Utils.extend({}, todo, { title: text });
-    });
+    this.todos = this.todos.map((todo) =>
+      todo !== todoToSave ? todo : { ...todo, title: text }
+    );
 
     this.inform();
   }
 
   clearCompleted() {
-    this.todos = this.todos.filter(function (todo) {
-      return !todo.completed;
-    });
+    this.todos = this.todos.filter((todo) => !todo.completed);
 
     this.inform();
   }

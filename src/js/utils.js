@@ -1,10 +1,11 @@
 const Utils = {
-  uuid: function () {
-    /*jshint bitwise:false */
-    var i, random;
-    var uuid = '';
+  uuid() {
+    /* eslint no-bitwise: ["error", { "int32Hint": true }] */
+    let i;
+    let random;
+    let uuid = '';
 
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < 32; i += 1) {
       random = (Math.random() * 16) | 0;
       if (i === 8 || i === 12 || i === 16 || i === 20) {
         uuid += '-';
@@ -18,30 +19,17 @@ const Utils = {
     return uuid;
   },
 
-  pluralize: function (count, word) {
-    return count === 1 ? word : word + 's';
+  pluralize(count, word) {
+    return count === 1 ? word : `${word}s`;
   },
 
-  store: function (namespace, data) {
+  store(namespace, data) {
     if (data) {
       return localStorage.setItem(namespace, JSON.stringify(data));
     }
 
-    var store = localStorage.getItem(namespace);
+    const store = localStorage.getItem(namespace);
     return (store && JSON.parse(store)) || [];
-  },
-
-  extend: function () {
-    var newObj = {};
-    for (var i = 0; i < arguments.length; i++) {
-      var obj = arguments[i];
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          newObj[key] = obj[key];
-        }
-      }
-    }
-    return newObj;
   },
 };
 
