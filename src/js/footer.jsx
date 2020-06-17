@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
 
 import Utils from './utils';
-import * as types from './constants';
 
-function TodoFooter({ count, completedCount, nowShowing, onClearCompleted }) {
+function TodoFooter({ count, completedCount, onClearCompleted }) {
   const activeTodoWord = Utils.pluralize(count, 'item');
   let clearButton = null;
 
@@ -30,36 +29,21 @@ function TodoFooter({ count, completedCount, nowShowing, onClearCompleted }) {
       </span>
       <ul className="filters">
         <li>
-          <a
-            href="#/"
-            className={classNames({
-              selected: nowShowing === types.ALL_TODOS,
-            })}
-          >
+          <NavLink exact to="/" activeClassName="selected">
             All
-          </a>
+          </NavLink>
         </li>
         <li>
           {' '}
-          <a
-            href="#/active"
-            className={classNames({
-              selected: nowShowing === types.ACTIVE_TODOS,
-            })}
-          >
+          <NavLink to="/active" activeClassName="selected">
             Active
-          </a>
+          </NavLink>
         </li>
         <li>
           {' '}
-          <a
-            href="#/completed"
-            className={classNames({
-              selected: nowShowing === types.COMPLETED_TODOS,
-            })}
-          >
+          <NavLink to="/completed" activeClassName="selected">
             Completed
-          </a>
+          </NavLink>
         </li>
       </ul>
       {clearButton}
@@ -70,7 +54,6 @@ function TodoFooter({ count, completedCount, nowShowing, onClearCompleted }) {
 TodoFooter.propTypes = {
   count: PropTypes.number.isRequired,
   completedCount: PropTypes.number.isRequired,
-  nowShowing: PropTypes.string.isRequired,
   onClearCompleted: PropTypes.func.isRequired,
 };
 

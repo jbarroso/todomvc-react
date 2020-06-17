@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Router } from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
 import TodoItem from './todoItem';
@@ -13,7 +12,6 @@ class TodoApp extends Component {
     super(props);
 
     this.state = {
-      nowShowing: types.ALL_TODOS,
       editing: null,
       newTodo: '',
     };
@@ -27,16 +25,6 @@ class TodoApp extends Component {
     this.save = this.save.bind(this);
     this.cancel = this.cancel.bind(this);
     this.clearCompleted = this.clearCompleted.bind(this);
-  }
-
-  componentDidMount() {
-    const { setState } = this;
-    const router = Router({
-      '/': setState.bind(this, { nowShowing: types.ALL_TODOS }),
-      '/active': setState.bind(this, { nowShowing: types.ACTIVE_TODOS }),
-      '/completed': setState.bind(this, { nowShowing: types.COMPLETED_TODOS }),
-    });
-    router.init('/');
   }
 
   handleChange(event) {
@@ -99,9 +87,9 @@ class TodoApp extends Component {
   render() {
     let footer;
     let main;
-    const { model } = this.props;
+    const { model, nowShowing } = this.props;
     const { todos } = model;
-    const { nowShowing, editing, newTodo } = this.state;
+    const { editing, newTodo } = this.state;
 
     const shownTodos = todos.filter((todo) => {
       switch (nowShowing) {
@@ -186,7 +174,16 @@ class TodoApp extends Component {
   }
 }
 
+TodoApp.defaultProps = {
+  nowShowing: types.ALL_TODOS,
+};
+
 TodoApp.propTypes = {
+  nowShowing: PropTypes.oneOf([
+    types.ALL_TODOS,
+    types.ACTIVE_TODOS,
+    types.COMPLETED_TODOS,
+  ]),
   model: PropTypes.shape({
     addTodo: PropTypes.func.isRequired,
     toggleAll: PropTypes.func.isRequired,

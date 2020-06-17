@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
 import TodoApp from './js/app';
@@ -10,7 +11,14 @@ const model = new TodoModel('react-todos');
 function render() {
   ReactDOM.render(
     <React.StrictMode>
-      <TodoApp model={model} />
+      <BrowserRouter>
+        <Route
+          path="/:nowShowing?"
+          render={(props) => (
+            <TodoApp nowShowing={props.match.params.nowShowing} model={model} />
+          )}
+        />
+      </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')
   );
