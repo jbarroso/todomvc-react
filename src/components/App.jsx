@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import 'todomvc-app-css/index.css';
 
 import Header from './Header';
-import TodoList from './TodoList';
+import MainSection from './MainSection';
 import TodoFooter from './Footer';
 import * as types from '../constants';
 
@@ -57,12 +57,10 @@ class App extends Component {
   }
 
   render() {
-    let footer;
-    let main;
     const { model, nowShowing } = this.props;
     const { todos } = model;
 
-    const shownTodos = todos.filter((todo) => {
+    const filteredTodos = todos.filter((todo) => {
       switch (nowShowing) {
         case types.ACTIVE_TODOS:
           return !todo.completed;
@@ -80,45 +78,28 @@ class App extends Component {
 
     const completedCount = todos.length - activeTodoCount;
 
-    if (activeTodoCount || completedCount) {
-      footer = (
-        <TodoFooter
-          count={activeTodoCount}
-          completedCount={completedCount}
-          nowShowing={nowShowing}
-          onClearCompleted={this.clearCompleted}
-        />
-      );
-    }
-
-    if (todos.length) {
-      main = (
-        <section className="main">
-          <input
-            id="toggle-all"
-            name="toggle-all"
-            className="toggle-all"
-            type="checkbox"
-            onChange={this.toggleAll}
-            checked={activeTodoCount === 0}
-          />
-          <label htmlFor="toggle-all" />
-          <TodoList
-            filteredTodos={shownTodos}
-            onToggle={this.toggle}
-            onDestroy={this.destroy}
-            onSave={this.save}
-          />
-        </section>
-      );
-    }
-
     return (
       <section className="todoapp">
         <div>
           <Header onSave={this.handleOnSave} />
-          {main}
-          {footer}
+          {todos.length && (
+            <MainSection
+              toggleAll={this.toggleAll}
+              activeTodoCount={activeTodoCount}
+              filteredTodos={filteredTodos}
+              onToggle={this.toggle}
+              onDestroy={this.destroy}
+              onSave={this.save}
+            />
+          )}
+          {(activeTodoCount || completedCount) && (
+            <TodoFooter
+              count={activeTodoCount}
+              completedCount={completedCount}
+              nowShowing={nowShowing}
+              onClearCompleted={this.clearCompleted}
+            />
+          )}
         </div>
       </section>
     );
