@@ -21,7 +21,9 @@
     "eject": "react-scripts eject",
     "eslint": "eslint --max-warnings=0 \"src/**/*.{js,jsx}\"",
     "eslint:fix": "eslint --fix --max-warnings=0 \"src/**/*.{js,jsx}\"",
-    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": [
@@ -41,7 +43,15 @@
       ],
       "jsx-a11y/label-has-associated-control": 0,
       "jsx-a11y/no-autofocus": 0,
-      "jsx-a11y/control-has-associated-label": 0
+      "jsx-a11y/control-has-associated-label": 0,
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/stories/**"
+          ]
+        }
+      ]
     }
   },
   "prettier": {
@@ -60,6 +70,11 @@
     ]
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/preset-create-react-app": "^3.1.1",
+    "@storybook/react": "^5.3.19",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.11.0",
