@@ -5,6 +5,7 @@ import 'todomvc-app-css/index.css';
 
 import TodoItem from './TodoItem';
 import TodoFooter from './Footer';
+import TodoTextInput from './TodoTextInput';
 import * as types from '../constants';
 
 class App extends Component {
@@ -13,11 +14,9 @@ class App extends Component {
 
     this.state = {
       editing: null,
-      newTodo: '',
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleNewTodoKeyDown = this.handleNewTodoKeyDown.bind(this);
+    this.handleOnSave = this.handleOnSave.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
     this.toggle = this.toggle.bind(this);
     this.destroy = this.destroy.bind(this);
@@ -27,25 +26,13 @@ class App extends Component {
     this.clearCompleted = this.clearCompleted.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({ newTodo: event.target.value });
-  }
-
-  handleNewTodoKeyDown(event) {
-    if (event.keyCode !== types.ENTER_KEY) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const { newTodo } = this.state;
+  handleOnSave(newTodoText) {
     const { model } = this.props;
 
-    const val = newTodo.trim();
+    const val = newTodoText.trim();
 
     if (val) {
       model.addTodo(val);
-      this.setState({ newTodo: '' });
     }
   }
 
@@ -89,7 +76,7 @@ class App extends Component {
     let main;
     const { model, nowShowing } = this.props;
     const { todos } = model;
-    const { editing, newTodo } = this.state;
+    const { editing } = this.state;
 
     const shownTodos = todos.filter((todo) => {
       switch (nowShowing) {
@@ -157,13 +144,10 @@ class App extends Component {
         <div>
           <header className="header">
             <h1>todos</h1>
-            <input
-              className="new-todo"
+            <TodoTextInput
+              newTodo
               placeholder="What needs to be done?"
-              value={newTodo}
-              onKeyDown={this.handleNewTodoKeyDown}
-              onChange={this.handleChange}
-              autoFocus
+              onSave={this.handleOnSave}
             />
           </header>
           {main}

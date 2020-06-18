@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import * as types from '../constants';
+import TodoTextInput from './TodoTextInput';
 
 class TodoItem extends Component {
   constructor(props) {
@@ -14,7 +14,6 @@ class TodoItem extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleDestroy = this.handleDestroy.bind(this);
@@ -37,28 +36,8 @@ class TodoItem extends Component {
     );
   }
 
-  /**
-   * Safely manipulate the DOM after updating the state when invoking
-   * `this.props.onEdit()` in the `handleEdit` method above.
-   * For more info refer to notes at https://facebook.github.io/react/docs/component-api.html#setstate
-   * and https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate
-   */
-  componentDidUpdate(prevProps) {
-    const { editing } = this.props;
-    if (!prevProps.editing && editing) {
-      this.node.focus();
-      this.node.setSelectionRange(
-        this.node.value.length,
-        this.node.value.length
-      );
-    }
-  }
-
-  handleSubmit() {
-    const { editText } = this.state;
+  handleSubmit(val) {
     const { todo, onSave, onDestroy } = this.props;
-    const val = editText.trim();
-
     if (val) {
       onSave(todo, val);
       this.setState({ editText: val });
@@ -71,16 +50,6 @@ class TodoItem extends Component {
     const { todo, onEdit } = this.props;
     onEdit(todo);
     this.setState({ editText: todo.title });
-  }
-
-  handleKeyDown(event) {
-    const { todo, onCancel } = this.props;
-    if (event.which === types.ESCAPE_KEY) {
-      this.setState({ editText: todo.title });
-      onCancel(event);
-    } else if (event.which === types.ENTER_KEY) {
-      this.handleSubmit(event);
-    }
   }
 
   handleChange(event) {
@@ -124,15 +93,10 @@ class TodoItem extends Component {
             onClick={this.handleDestroy}
           />
         </div>
-        <input
-          ref={(node) => {
-            this.node = node;
-          }}
-          className="edit"
-          value={editText}
-          onBlur={this.handleSubmit}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
+        <TodoTextInput
+          text={editText}
+          onSave={this.handleSubmit}
+          editing={editing}
         />
       </li>
     );
@@ -142,7 +106,6 @@ TodoItem.propTypes = {
   onDestroy: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
   onToggle: PropTypes.func.isRequired,
   editing: PropTypes.bool.isRequired,
   todo: PropTypes.shape({
