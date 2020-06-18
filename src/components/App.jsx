@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import 'todomvc-app-css/index.css';
 
-import TodoItem from './todoItem';
-import TodoFooter from './footer';
+import TodoItem from './TodoItem';
+import TodoFooter from './Footer';
 import * as types from '../constants';
 
-class TodoApp extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
 
@@ -174,11 +174,11 @@ class TodoApp extends Component {
   }
 }
 
-TodoApp.defaultProps = {
+App.defaultProps = {
   nowShowing: types.ALL_TODOS,
 };
 
-TodoApp.propTypes = {
+App.propTypes = {
   nowShowing: PropTypes.oneOf([
     types.ALL_TODOS,
     types.ACTIVE_TODOS,
@@ -195,4 +195,4 @@ TodoApp.propTypes = {
   }).isRequired,
 };
 
-export default TodoApp;
+export default App;

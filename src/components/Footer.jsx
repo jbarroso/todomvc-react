@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import Utils from '../utils';
 
-function TodoFooter({ count, completedCount, onClearCompleted }) {
+function Footer({ count, completedCount, onClearCompleted }) {
   const activeTodoWord = Utils.pluralize(count, 'item');
   let clearButton = null;
 
@@ -51,10 +51,10 @@ function TodoFooter({ count, completedCount, onClearCompleted }) {
   );
 }
 
-TodoFooter.propTypes = {
+Footer.propTypes = {
   count: PropTypes.number.isRequired,
   completedCount: PropTypes.number.isRequired,
   onClearCompleted: PropTypes.func.isRequired,
 };
 
-export default TodoFooter;
+export default Footer;

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
-import TodoApp from './components/app';
+import App from './components/App';
 import TodoModel from './todoModel';
 
 const model = new TodoModel('react-todos');
@@ -15,7 +15,7 @@ function render() {
         <Route
           path="/:nowShowing?"
           render={(props) => (
-            <TodoApp nowShowing={props.match.params.nowShowing} model={model} />
+            <App nowShowing={props.match.params.nowShowing} model={model} />
           )}
         />
       </BrowserRouter>
