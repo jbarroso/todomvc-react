@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import 'todomvc-app-css/index.css';
 
+import Header from './Header';
 import TodoItem from './TodoItem';
 import TodoFooter from './Footer';
-import TodoTextInput from './TodoTextInput';
 import * as types from '../constants';
 
 class App extends Component {
@@ -142,14 +142,7 @@ class App extends Component {
     return (
       <section className="todoapp">
         <div>
-          <header className="header">
-            <h1>todos</h1>
-            <TodoTextInput
-              newTodo
-              placeholder="What needs to be done?"
-              onSave={this.handleOnSave}
-            />
-          </header>
+          <Header onSave={this.handleOnSave} />
           {main}
           {footer}
         </div>

@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import Utils from '../utils';
 
-function Footer({ count, completedCount, onClearCompleted }) {
+const Footer = ({ count, completedCount, onClearCompleted }) => {
   const activeTodoWord = Utils.pluralize(count, 'item');
   let clearButton = null;
 
@@ -49,7 +49,7 @@ function Footer({ count, completedCount, onClearCompleted }) {
       {clearButton}
     </footer>
   );
-}
+};
 
 Footer.propTypes = {
   count: PropTypes.number.isRequired,
