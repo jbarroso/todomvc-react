@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import 'todomvc-app-css/index.css';
 
 import Header from './Header';
-import TodoItem from './TodoItem';
+import TodoList from './TodoList';
 import TodoFooter from './Footer';
 import * as types from '../constants';
 
@@ -12,17 +12,11 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      editing: null,
-    };
-
     this.handleOnSave = this.handleOnSave.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
     this.toggle = this.toggle.bind(this);
     this.destroy = this.destroy.bind(this);
-    this.edit = this.edit.bind(this);
     this.save = this.save.bind(this);
-    this.cancel = this.cancel.bind(this);
     this.clearCompleted = this.clearCompleted.bind(this);
   }
 
@@ -52,18 +46,9 @@ class App extends Component {
     model.destroy(todo);
   }
 
-  edit(todo) {
-    this.setState({ editing: todo.id });
-  }
-
   save(todoToSave, text) {
     const { model } = this.props;
     model.save(todoToSave, text);
-    this.setState({ editing: null });
-  }
-
-  cancel() {
-    this.setState({ editing: null });
   }
 
   clearCompleted() {
@@ -76,7 +61,6 @@ class App extends Component {
     let main;
     const { model, nowShowing } = this.props;
     const { todos } = model;
-    const { editing } = this.state;
 
     const shownTodos = todos.filter((todo) => {
       switch (nowShowing) {
@@ -87,21 +71,6 @@ class App extends Component {
         default:
           return true;
       }
-    });
-
-    const todoItems = shownTodos.map((todo) => {
-      return (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onToggle={this.toggle}
-          onDestroy={this.destroy}
-          onEdit={this.edit}
-          editing={editing === todo.id}
-          onSave={this.save}
-          onCancel={this.cancel}
-        />
-      );
     });
 
     const activeTodoCount = todos.reduce(
@@ -134,7 +103,12 @@ class App extends Component {
             checked={activeTodoCount === 0}
           />
           <label htmlFor="toggle-all" />
-          <ul className="todo-list">{todoItems}</ul>
+          <TodoList
+            filteredTodos={shownTodos}
+            onToggle={this.toggle}
+            onDestroy={this.destroy}
+            onSave={this.save}
+          />
         </section>
       );
     }

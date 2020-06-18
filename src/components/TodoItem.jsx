@@ -10,6 +10,7 @@ class TodoItem extends Component {
 
     this.state = {
       editText: props.todo.title,
+      editing: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,11 +28,11 @@ class TodoItem extends Component {
    * of magnitude performance improvement.
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const { todo, editing } = this.props;
-    const { editText } = this.state;
+    const { todo } = this.props;
+    const { editText, editing } = this.state;
     return (
       nextProps.todo !== todo ||
-      nextProps.editing !== editing ||
+      nextState.editing !== editing ||
       nextState.editText !== editText
     );
   }
@@ -40,20 +41,20 @@ class TodoItem extends Component {
     const { todo, onSave, onDestroy } = this.props;
     if (val) {
       onSave(todo, val);
-      this.setState({ editText: val });
+      this.setState({ editText: val, editing: false });
     } else {
       onDestroy(todo);
+      this.setState({ editing: false });
     }
   }
 
   handleEdit() {
-    const { todo, onEdit } = this.props;
-    onEdit(todo);
-    this.setState({ editText: todo.title });
+    const { todo } = this.props;
+    this.setState({ editText: todo.title, editing: true });
   }
 
   handleChange(event) {
-    const { editing } = this.props;
+    const { editing } = this.state;
     if (editing) {
       this.setState({ editText: event.target.value });
     }
@@ -70,8 +71,8 @@ class TodoItem extends Component {
   }
 
   render() {
-    const { todo, editing } = this.props;
-    const { editText } = this.state;
+    const { todo } = this.props;
+    const { editText, editing } = this.state;
     return (
       <li
         className={classNames({
@@ -104,11 +105,10 @@ class TodoItem extends Component {
 }
 TodoItem.propTypes = {
   onDestroy: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onToggle: PropTypes.func.isRequired,
-  editing: PropTypes.bool.isRequired,
   todo: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
   }).isRequired,
