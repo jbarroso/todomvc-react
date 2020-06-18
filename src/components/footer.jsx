@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-import Utils from './utils';
+import Utils from '../utils';
 
 function TodoFooter({ count, completedCount, onClearCompleted }) {
   const activeTodoWord = Utils.pluralize(count, 'item');

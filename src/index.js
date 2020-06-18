@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
-import TodoApp from './js/app';
-import TodoModel from './js/todoModel';
+import TodoApp from './components/app';
+import TodoModel from './todoModel';
 
 const model = new TodoModel('react-todos');
 

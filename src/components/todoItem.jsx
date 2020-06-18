@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import * as types from './constants';
+import * as types from '../constants';
 
 class TodoItem extends Component {
   constructor(props) {

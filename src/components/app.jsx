@@ -5,7 +5,7 @@ import 'todomvc-app-css/index.css';
 
 import TodoItem from './todoItem';
 import TodoFooter from './footer';
-import * as types from './constants';
+import * as types from '../constants';
 
 class TodoApp extends Component {
   constructor(props) {
