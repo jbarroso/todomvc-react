@@ -1,31 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
+
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import reducer from './reducers';
+import Utils from './utils';
+import App from './containers/App';
 
-import App from './components/App';
-import TodoModel from './todoModel';
+const STORE_KEY = 'react-todos';
+const store = createStore(reducer, Utils.store(STORE_KEY));
+store.subscribe(() => Utils.store(STORE_KEY, store.getState()));
 
-const model = new TodoModel('react-todos');
-
-function render() {
-  ReactDOM.render(
-    <React.StrictMode>
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
       <BrowserRouter>
         <Route
           path="/:nowShowing?"
-          render={(props) => (
-            <App nowShowing={props.match.params.nowShowing} model={model} />
-          )}
+          render={(props) => <App nowShowing={props.match.params.nowShowing} />}
         />
       </BrowserRouter>
-    </React.StrictMode>,
-    document.getElementById('root')
-  );
-}
-
-model.subscribe(render);
-render();
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
