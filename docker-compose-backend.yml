@@ -1,0 +1,10 @@
+version: '3.6'
+
+services:
+
+  todobackend-django-app:
+    image: jbarroso/todobackend-django
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
