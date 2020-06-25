@@ -10,7 +10,14 @@ import Utils from './utils';
 import App from './containers/App';
 
 const STORE_KEY = 'react-todos';
-const store = createStore(reducer, Utils.store(STORE_KEY));
+
+/* eslint-disable no-underscore-dangle */
+const store = createStore(
+  reducer,
+  Utils.store(STORE_KEY),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+/* eslint-enable */
 store.subscribe(() => Utils.store(STORE_KEY, store.getState()));
 
 ReactDOM.render(
