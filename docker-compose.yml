@@ -18,3 +18,10 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
+
+  todobackend-app:
+    image: jbarroso/todobackend-django
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
