@@ -1,11 +1,20 @@
 import * as types from '../constants/ActionTypes';
 import * as actions from './index';
+import Utils from '../utils';
+
+jest.mock('../utils');
 
 describe('todo actions', () => {
   it('addTodo should create ADD_TODO action', () => {
+    const id = 'newId';
+    Utils.uuid.mockReturnValue(id);
     expect(actions.addTodo('Use Redux')).toEqual({
       type: types.ADD_TODO,
-      title: 'Use Redux',
+      newTodo: {
+        id,
+        title: 'Use Redux',
+        completed: false,
+      },
     });
   });
 

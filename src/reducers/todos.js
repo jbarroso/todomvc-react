@@ -7,8 +7,6 @@ import {
   CLEAR_COMPLETED,
 } from '../constants/ActionTypes';
 
-import Utils from '../utils';
-
 const initialState = [];
 
 const areAllMarked = (state) => state.every((todo) => todo.completed);
@@ -19,9 +17,7 @@ export default function todos(state = initialState, action) {
       return [
         ...state,
         {
-          id: Utils.uuid(),
-          completed: false,
-          title: action.title,
+          ...action.newTodo,
         },
       ];
 
