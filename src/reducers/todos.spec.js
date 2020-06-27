@@ -1,8 +1,5 @@
 import todos from './todos';
 import * as types from '../constants/ActionTypes';
-import Utils from '../utils';
-
-jest.mock('../utils');
 
 describe('todos reducer', () => {
   it('should handle initial state', () => {
@@ -11,12 +8,15 @@ describe('todos reducer', () => {
 
   it('should handle ADD_TODO with a empty list', () => {
     const id = 'newId';
-    Utils.uuid.mockReturnValue(id);
 
     expect(
       todos([], {
         type: types.ADD_TODO,
-        title: 'Run the tests',
+        newTodo: {
+          title: 'Run the tests',
+          completed: false,
+          id,
+        },
       })
     ).toEqual([
       {
@@ -29,8 +29,6 @@ describe('todos reducer', () => {
 
   it('should handle ADD_TODO with a todo element', () => {
     const id = 'newId';
-    Utils.uuid.mockReturnValue(id);
-
     expect(
       todos(
         [
@@ -42,7 +40,11 @@ describe('todos reducer', () => {
         ],
         {
           type: types.ADD_TODO,
-          title: 'Run the tests',
+          newTodo: {
+            title: 'Run the tests',
+            completed: false,
+            id,
+          },
         }
       )
     ).toEqual([
