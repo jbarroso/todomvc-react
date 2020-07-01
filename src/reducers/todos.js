@@ -1,47 +1,93 @@
 import {
-  ADD_TODO,
-  DELETE_TODO,
-  SAVE_TODO,
-  COMPLETE_TODO,
-  COMPLETE_ALL_TODOS,
-  CLEAR_COMPLETED,
+  FETCH_TODOS_SUCCESS,
+  ADD_TODO_SUCCESS,
+  DELETE_TODO_SUCCESS,
+  SAVE_TODO_SUCCESS,
+  COMPLETE_TODO_SUCCESS,
+  COMPLETE_ALL_TODOS_SUCCESS,
+  CLEAR_COMPLETED_SUCCESS,
 } from '../constants/ActionTypes';
 
-const initialState = [];
+import { areAllMarked } from '../selectors';
 
-const areAllMarked = (state) => state.every((todo) => todo.completed);
+import initialState from './initialState';
 
 export default function todos(state = initialState, action) {
+  const actionRequest = `${action.type}_REQUEST`;
+  const actionFailure = `${action.type}_FAILURE`;
+
   switch (action.type) {
-    case ADD_TODO:
-      return [
+    case actionRequest:
+      return {
         ...state,
-        {
-          ...action.newTodo,
-        },
-      ];
+        loading: true,
+      };
+    case actionFailure:
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      };
+    case FETCH_TODOS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        todos: action.todos,
+      };
+    case ADD_TODO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        todos: [
+          ...state.todos,
+          {
+            ...action.newTodo,
+          },
+        ],
+      };
+    case DELETE_TODO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        todos: state.todos.filter((todo) => todo.id !== action.id),
+      };
 
-    case DELETE_TODO:
-      return state.filter((todo) => todo.id !== action.id);
+    case SAVE_TODO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        todos: state.todos.map((todo) =>
+          todo === action.todoToSave ? { ...todo, title: action.title } : todo
+        ),
+      };
 
-    case SAVE_TODO:
-      return state.map((todo) =>
-        todo === action.todoToSave ? { ...todo, title: action.title } : todo
-      );
+    case COMPLETE_TODO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        todos: state.todos.map((todo) =>
+          todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
+        ),
+      };
 
-    case COMPLETE_TODO:
-      return state.map((todo) =>
-        todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
-      );
+    case COMPLETE_ALL_TODOS_SUCCESS: {
+      const completed = !areAllMarked({ todos: state });
+      return {
+        ...state,
+        loading: false,
+        todos: state.todos.map((todo) => ({
+          ...todo,
+          completed,
+        })),
+      };
+    }
 
-    case COMPLETE_ALL_TODOS:
-      return state.map((todo) => ({
-        ...todo,
-        completed: !areAllMarked(state),
-      }));
-
-    case CLEAR_COMPLETED:
-      return state.filter((todo) => todo.completed === false);
+    case CLEAR_COMPLETED_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        todos: state.todos.filter((todo) => todo.completed === false),
+      };
 
     default:
       return state;

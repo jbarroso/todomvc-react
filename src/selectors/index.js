@@ -7,7 +7,7 @@ import {
 
 const getVisibilityFilter = (state, { nowShowing = ALL_TODOS }) => nowShowing;
 
-const getTodos = (state) => state.todos;
+export const getTodos = (state) => state.todos.todos;
 
 export const getVisibleTodos = createSelector(
   [getVisibilityFilter, getTodos],
@@ -32,3 +32,7 @@ export const getCompletedTodoCount = createSelector([getTodos], (todos) =>
 export const getTodosCount = (state) => getTodos(state).length;
 export const getActiveTodoCount = (state) =>
   getTodosCount(state) - getCompletedTodoCount(state);
+
+export const areAllMarked = createSelector([getTodos], (todos) =>
+  todos.every((todo) => todo.completed)
+);

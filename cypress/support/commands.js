@@ -33,6 +33,9 @@ Cypress.Commands.add('createDefaultTodos', function () {
     },
   })
 
+  cy.server();
+  cy.route('POST', '**/todos/').as('postTodos');
+
   // additionally we pass {log: false} to all of our
   // sub-commands so none of them will output to
   // our command log
@@ -41,6 +44,8 @@ Cypress.Commands.add('createDefaultTodos', function () {
   .type(`${TODO_ITEM_ONE}{enter}`, { log: false })
   .type(`${TODO_ITEM_TWO}{enter}`, { log: false })
   .type(`${TODO_ITEM_THREE}{enter}`, { log: false })
+
+  cy.wait(['@postTodos','@postTodos', '@postTodos']);
 
   cy.get('.todo-list li', { log: false })
   .then(function ($listItems) {
@@ -66,8 +71,13 @@ Cypress.Commands.add('createTodo', function (todo) {
     },
   })
 
+  cy.server();
+  cy.route('POST', '**/todos/').as('postTodos');
+
   // create the todo
   cy.get('.new-todo', { log: false }).type(`${todo}{enter}`, { log: false })
+
+  cy.wait('@postTodos');
 
   // now go find the actual todo
   // in the todo list so we can

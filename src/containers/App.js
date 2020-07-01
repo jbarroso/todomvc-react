@@ -5,6 +5,7 @@ import {
   getActiveTodoCount,
   getTodosCount,
 } from '../selectors';
+import { fetchTodos } from '../actions';
 
 const mapStateToProps = (state, { nowShowing }) => ({
   todosCount: getTodosCount(state),
@@ -13,4 +14,4 @@ const mapStateToProps = (state, { nowShowing }) => ({
   nowShowing,
 });
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, { fetchTodos })(App);

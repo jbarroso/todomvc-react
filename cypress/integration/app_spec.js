@@ -40,7 +40,9 @@ describe('TodoMVC - React', function () {
     // which is automatically prepended to cy.visit
     //
     // https://on.cypress.io/api/visit
-    cy.visit('/')
+
+    cy.exec('curl -X DELETE http://todobackend-app:8000/todos/');
+    cy.visit('/');
   })
 
   afterEach(() => {
@@ -55,9 +57,8 @@ describe('TodoMVC - React', function () {
 
   // a very simple example helpful during presentations
   it('adds 2 todos', function () {
-    cy.get('.new-todo')
-    .type('learn testing{enter}')
-    .type('be cool{enter}')
+    cy.createTodo('learn testing');
+    cy.createTodo('be cool');
 
     cy.get('.todo-list li').should('have.length', 2)
   })
@@ -97,9 +98,7 @@ describe('TodoMVC - React', function () {
 
     it('should allow me to add todo items', function () {
       // create 1st todo
-      cy.get('.new-todo')
-      .type(TODO_ITEM_ONE)
-      .type('{enter}')
+      cy.createTodo(TODO_ITEM_ONE);
 
       // make sure the 1st label contains the 1st todo text
       cy.get('.todo-list li')
@@ -107,10 +106,9 @@ describe('TodoMVC - React', function () {
       .find('label')
       .should('contain', TODO_ITEM_ONE)
 
+
       // create 2nd todo
-      cy.get('.new-todo')
-      .type(TODO_ITEM_TWO)
-      .type('{enter}')
+      cy.createTodo(TODO_ITEM_TWO);
 
       // make sure the 2nd label contains the 2nd todo text
       cy.get('.todo-list li')
@@ -121,19 +119,16 @@ describe('TodoMVC - React', function () {
 
     it('adds items', function () {
       // create several todos then check the number of items in the list
-      cy.get('.new-todo')
-      .type('todo A{enter}')
-      .type('todo B{enter}') // we can continue working with same element
-      .type('todo C{enter}') // and keep adding new items
-      .type('todo D{enter}')
-
+      cy.createTodo('todo A');
+      cy.createTodo('todo B');
+      cy.createTodo('todo C');
+      cy.createTodo('todo D');
       cy.get('.todo-list li').should('have.length', 4)
     })
 
     it('should clear text input field when an item is added', function () {
-      cy.get('.new-todo')
-      .type(TODO_ITEM_ONE)
-      .type('{enter}')
+
+      cy.createTodo(TODO_ITEM_ONE);
 
       cy.get('.new-todo').should('have.text', '')
     })
@@ -205,7 +200,11 @@ describe('TodoMVC - React', function () {
       // complete all todos
       // we use 'check' instead of 'click'
       // because that indicates our intention much clearer
-      cy.get('.toggle-all').check()
+      cy.server();
+      cy.route('PATCH', '**/todos/**/').as('patchTodos');
+      cy.get('.toggle-all').click();
+
+      cy.wait(2000); // TODO: Remove this flaky workaround after https://github.com/cypress-io/cypress/issues/4460 is fixed
 
       // get each todo li and ensure its class is 'completed'
       cy.get('@todos')
@@ -223,9 +222,16 @@ describe('TodoMVC - React', function () {
 
     it('should allow me to clear the complete state of all items', function () {
       // check and then immediately uncheck
+      cy.server();
+      cy.route('PATCH', '**/todos/**/').as('patchTodos');
+
       cy.get('.toggle-all')
-      .check()
-      .uncheck()
+        .check();
+      cy.wait(2000); // TODO: Remove this flaky workaround after https://github.com/cypress-io/cypress/issues/4460 is fixed
+
+      cy.get('.toggle-all')
+      .uncheck();
+      cy.wait(2000); // TODO: Remove this flaky workaround after https://github.com/cypress-io/cypress/issues/4460 is fixed
 
       cy.get('@todos')
       .eq(0)
@@ -241,13 +247,18 @@ describe('TodoMVC - React', function () {
     })
 
     it('complete all checkbox should update state when items are completed / cleared', function () {
+      cy.server();
+      cy.route('PATCH', '**/todos/**/').as('patchTodos');
+
       // alias the .toggle-all for reuse later
       cy.get('.toggle-all')
       .as('toggleAll')
-      .check()
+      .check();
+      cy.wait(2000); // TODO: Remove this flaky workaround after https://github.com/cypress-io/cypress/issues/4460 is fixed
+
       // this assertion is silly here IMO but
       // it is what TodoMVC does
-      .should('be.checked')
+      cy.get('@toggleAll').should('be.checked')
 
       // alias the first todo and then click it
       cy.get('.todo-list li')
@@ -255,6 +266,8 @@ describe('TodoMVC - React', function () {
       .as('firstTodo')
       .find('.toggle')
       .uncheck()
+
+      cy.wait('@patchTodos');
 
       // reference the .toggle-all element again
       // and make sure its not checked
@@ -264,6 +277,8 @@ describe('TodoMVC - React', function () {
       cy.get('@firstTodo')
       .find('.toggle')
       .check()
+
+      cy.wait('@patchTodos');
 
       // assert the toggle all is checked again
       cy.get('@toggleAll').should('be.checked')
@@ -282,9 +297,19 @@ describe('TodoMVC - React', function () {
       cy.createTodo(TODO_ITEM_ONE).as('firstTodo')
       cy.createTodo(TODO_ITEM_TWO).as('secondTodo')
 
+      cy.server();
+      cy.route('PATCH', '**/todos/**/').as('patchTodos');
+
       cy.get('@firstTodo')
       .find('.toggle')
       .check()
+
+      cy.wait('@patchTodos')
+
+      cy.get('.todo-list li')
+      .eq(0)
+      .as('firstTodo')
+      .find('.toggle')
 
       cy.get('@firstTodo').should('have.class', 'completed')
 
@@ -292,6 +317,8 @@ describe('TodoMVC - React', function () {
       cy.get('@secondTodo')
       .find('.toggle')
       .check()
+
+      cy.wait('@patchTodos')
 
       cy.get('@firstTodo').should('have.class', 'completed')
       cy.get('@secondTodo').should('have.class', 'completed')
@@ -301,9 +328,14 @@ describe('TodoMVC - React', function () {
       cy.createTodo(TODO_ITEM_ONE).as('firstTodo')
       cy.createTodo(TODO_ITEM_TWO).as('secondTodo')
 
+      cy.server();
+      cy.route('PATCH', '**/todos/**').as('patchTodos');
+
       cy.get('@firstTodo')
       .find('.toggle')
       .check()
+
+      cy.wait('@patchTodos')
 
       cy.get('@firstTodo').should('have.class', 'completed')
       cy.get('@secondTodo').should('not.have.class', 'completed')
@@ -311,6 +343,8 @@ describe('TodoMVC - React', function () {
       cy.get('@firstTodo')
       .find('.toggle')
       .uncheck()
+
+      cy.wait('@patchTodos')
 
       cy.get('@firstTodo').should('not.have.class', 'completed')
       cy.get('@secondTodo').should('not.have.class', 'completed')
@@ -327,6 +361,9 @@ describe('TodoMVC - React', function () {
       .find('label')
       .dblclick()
 
+      cy.server();
+      cy.route('PATCH', '**/todos/**').as('patchTodos');
+
       // clear out the inputs current value
       // and type a new value
       cy.get('@secondTodo')
@@ -334,6 +371,8 @@ describe('TodoMVC - React', function () {
       .clear()
       .type('buy some sausages')
       .type('{enter}')
+
+      cy.wait('@patchTodos')
 
       // explicitly assert about the text value
       cy.get('@todos')
@@ -378,6 +417,8 @@ describe('TodoMVC - React', function () {
       .find('label')
       .dblclick()
 
+      cy.route('PATCH', '**/todos/**').as('patchTodos');
+
       cy.get('@secondTodo')
       .find('.edit')
       .clear()
@@ -387,6 +428,8 @@ describe('TodoMVC - React', function () {
       // on another button on the page. though you
       // could do that its just more mental work
       .blur()
+
+      cy.wait('@patchTodos');
 
       cy.get('@todos')
       .eq(0)
@@ -405,11 +448,16 @@ describe('TodoMVC - React', function () {
       .find('label')
       .dblclick()
 
+      cy.server();
+      cy.route('PATCH', '**/todos/**').as('patchTodos');
+
       cy.get('@secondTodo')
       .find('.edit')
       .clear()
       .type('    buy some sausages    ')
       .type('{enter}')
+
+      cy.wait('@patchTodos');
 
       cy.get('@todos')
       .eq(0)
@@ -428,10 +476,15 @@ describe('TodoMVC - React', function () {
       .find('label')
       .dblclick()
 
+      cy.server();
+      cy.route('DELETE', '**/todos/**').as('deleteTodo');
+
       cy.get('@secondTodo')
       .find('.edit')
       .clear()
       .type('{enter}')
+
+      cy.wait('@deleteTodo');
 
       cy.get('@todos').should('have.length', 2)
     })
@@ -477,21 +530,35 @@ describe('TodoMVC - React', function () {
     })
 
     it('should display the correct text', function () {
+      cy.server();
+      cy.route('PATCH', '**/todos/**').as('patchTodos');
+
       cy.get('@todos')
       .eq(0)
       .find('.toggle')
       .check()
 
+      cy.wait('@patchTodos');
+
       cy.get('.clear-completed').contains('Clear completed')
     })
 
     it('should remove completed items when clicked', function () {
+      cy.server();
+      cy.route('PATCH', '**/todos/**').as('patchTodos');
+      cy.route('DELETE', '**/todos/**').as('deleteTodo');
+
       cy.get('@todos')
       .eq(1)
       .find('.toggle')
       .check()
 
+      cy.wait('@patchTodos');
+
       cy.get('.clear-completed').click()
+
+      cy.wait('@deleteTodo');
+
       cy.get('@todos').should('have.length', 2)
       cy.get('@todos')
       .eq(0)
