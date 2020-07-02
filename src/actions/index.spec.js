@@ -30,29 +30,29 @@ describe('actions', () => {
     });
 
     it('should creates ADD_TODO_SUCCESS when fetching todos has been done', async () => {
-      const expectedActions = [
-        { type: types.ADD_TODO_REQUEST },
-        { type: types.ADD_TODO_SUCCESS, newTodo },
-      ];
       api.addTodo.mockReturnValue(newTodo);
 
       await store.dispatch(actions.addTodo(newTodo.title));
 
       expect(api.addTodo).toHaveBeenCalledWith(newTodo.title);
+      const expectedActions = [
+        { type: types.ADD_TODO_REQUEST },
+        { type: types.ADD_TODO_SUCCESS, newTodo },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('should create ADD_TODO_FAILURE when addTodo throw an exception', async () => {
-      const expectedActions = [
-        { type: types.ADD_TODO_REQUEST },
-        { type: types.ADD_TODO_FAILURE, error: errorMessage },
-      ];
-
       api.addTodo.mockImplementationOnce(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.addTodo(newTodo.title));
+
+      const expectedActions = [
+        { type: types.ADD_TODO_REQUEST },
+        { type: types.ADD_TODO_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -65,28 +65,27 @@ describe('actions', () => {
     });
 
     it('should creates DELETE_TODO_SUCCESS when fetching todos has been done', async () => {
+      await store.dispatch(actions.deleteTodo(id));
+
+      expect(api.deleteTodo).toHaveBeenCalledWith(id);
       const expectedActions = [
         { type: types.DELETE_TODO_REQUEST },
         { type: types.DELETE_TODO_SUCCESS, id },
       ];
-
-      await store.dispatch(actions.deleteTodo(id));
-
-      expect(api.deleteTodo).toHaveBeenCalledWith(id);
       expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('should create DELETE_TODO_FAILURE when deleteTodo throw an exception', async () => {
-      const expectedActions = [
-        { type: types.DELETE_TODO_REQUEST },
-        { type: types.DELETE_TODO_FAILURE, error: errorMessage },
-      ];
-
       api.deleteTodo.mockImplementationOnce(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.deleteTodo(id));
+
+      const expectedActions = [
+        { type: types.DELETE_TODO_REQUEST },
+        { type: types.DELETE_TODO_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -104,27 +103,27 @@ describe('actions', () => {
     });
 
     it('should creates SAVE_TODO_SUCCESS when updating todo has been done', async () => {
+      await store.dispatch(actions.saveTodo(todoToSave, title));
+
+      expect(api.updateTodo).toHaveBeenCalledWith(todoToSave.id, { title });
       const expectedActions = [
         { type: types.SAVE_TODO_REQUEST },
         { type: types.SAVE_TODO_SUCCESS, todoToSave, title },
       ];
-      await store.dispatch(actions.saveTodo(todoToSave, title));
-
-      expect(api.updateTodo).toHaveBeenCalledWith(todoToSave.id, { title });
       expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('should create SAVE_TODO_FAILURE when updating throw an exception', async () => {
-      const expectedActions = [
-        { type: types.SAVE_TODO_REQUEST },
-        { type: types.SAVE_TODO_FAILURE, error: errorMessage },
-      ];
-
       api.updateTodo.mockImplementationOnce(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.saveTodo(todoToSave, title));
+
+      const expectedActions = [
+        { type: types.SAVE_TODO_REQUEST },
+        { type: types.SAVE_TODO_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -138,27 +137,27 @@ describe('actions', () => {
     });
 
     it('should creates COMPLETE_TODO_SUCCESS when updating todo has been done', async () => {
+      await store.dispatch(actions.completeTodo(id));
+
+      expect(api.updateTodo).toHaveBeenCalledWith(id, { completed: true });
       const expectedActions = [
         { type: types.COMPLETE_TODO_REQUEST },
         { type: types.COMPLETE_TODO_SUCCESS, id },
       ];
-      await store.dispatch(actions.completeTodo(id));
-
-      expect(api.updateTodo).toHaveBeenCalledWith(id, { completed: true });
       expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('should create COMPLETE_TODO_FAILURE when updating throw an exception', async () => {
-      const expectedActions = [
-        { type: types.COMPLETE_TODO_REQUEST },
-        { type: types.COMPLETE_TODO_FAILURE, error: errorMessage },
-      ];
-
       api.updateTodo.mockImplementationOnce(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.completeTodo(id));
+
+      const expectedActions = [
+        { type: types.COMPLETE_TODO_REQUEST },
+        { type: types.COMPLETE_TODO_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -177,10 +176,7 @@ describe('actions', () => {
           ],
         },
       });
-      const expectedActions = [
-        { type: types.COMPLETE_ALL_TODOS_REQUEST },
-        { type: types.COMPLETE_ALL_TODOS_SUCCESS },
-      ];
+
       await store.dispatch(actions.completeAllTodos());
 
       expect(api.updateTodo).toHaveBeenNthCalledWith(1, 'foo', {
@@ -189,6 +185,10 @@ describe('actions', () => {
       expect(api.updateTodo).toHaveBeenNthCalledWith(2, 'bar', {
         completed: true,
       });
+      const expectedActions = [
+        { type: types.COMPLETE_ALL_TODOS_REQUEST },
+        { type: types.COMPLETE_ALL_TODOS_SUCCESS },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
 
@@ -201,10 +201,7 @@ describe('actions', () => {
           ],
         },
       });
-      const expectedActions = [
-        { type: types.COMPLETE_ALL_TODOS_REQUEST },
-        { type: types.COMPLETE_ALL_TODOS_SUCCESS },
-      ];
+
       await store.dispatch(actions.completeAllTodos());
 
       expect(api.updateTodo).toHaveBeenNthCalledWith(1, 'foo', {
@@ -213,6 +210,10 @@ describe('actions', () => {
       expect(api.updateTodo).toHaveBeenNthCalledWith(2, 'bar', {
         completed: false,
       });
+      const expectedActions = [
+        { type: types.COMPLETE_ALL_TODOS_REQUEST },
+        { type: types.COMPLETE_ALL_TODOS_SUCCESS },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
 
@@ -225,17 +226,16 @@ describe('actions', () => {
           ],
         },
       });
-
-      const expectedActions = [
-        { type: types.COMPLETE_ALL_TODOS_REQUEST },
-        { type: types.COMPLETE_ALL_TODOS_FAILURE, error: errorMessage },
-      ];
-
       api.updateTodo.mockImplementation(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.completeAllTodos());
+
+      const expectedActions = [
+        { type: types.COMPLETE_ALL_TODOS_REQUEST },
+        { type: types.COMPLETE_ALL_TODOS_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -255,15 +255,16 @@ describe('actions', () => {
           ],
         },
       });
-      const expectedActions = [
-        { type: types.CLEAR_COMPLETED_REQUEST },
-        { type: types.CLEAR_COMPLETED_SUCCESS },
-      ];
+
       await store.dispatch(actions.clearCompleted());
 
       expect(api.deleteTodo).toHaveBeenCalledTimes(2);
       expect(api.deleteTodo).toHaveBeenNthCalledWith(1, 'foo');
       expect(api.deleteTodo).toHaveBeenNthCalledWith(2, 'bar');
+      const expectedActions = [
+        { type: types.CLEAR_COMPLETED_REQUEST },
+        { type: types.CLEAR_COMPLETED_SUCCESS },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
 
@@ -276,17 +277,16 @@ describe('actions', () => {
           ],
         },
       });
-
-      const expectedActions = [
-        { type: types.CLEAR_COMPLETED_REQUEST },
-        { type: types.CLEAR_COMPLETED_FAILURE, error: errorMessage },
-      ];
-
       api.deleteTodo.mockImplementation(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.clearCompleted());
+
+      const expectedActions = [
+        { type: types.CLEAR_COMPLETED_REQUEST },
+        { type: types.CLEAR_COMPLETED_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -305,28 +305,28 @@ describe('actions', () => {
     });
 
     it('should creates FETCH_TODOS_SUCCESS when fetching todos has been done', async () => {
+      api.fetchTodos.mockReturnValue(expectedTodos);
+
+      await store.dispatch(actions.fetchTodos());
+
       const expectedActions = [
         { type: types.FETCH_TODOS_REQUEST },
         { type: types.FETCH_TODOS_SUCCESS, todos: expectedTodos },
       ];
-
-      api.fetchTodos.mockReturnValue(expectedTodos);
-
-      await store.dispatch(actions.fetchTodos());
       expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('should create FETCH_TODOS_FAILURE when fetching todos throw an exception', async () => {
-      const expectedActions = [
-        { type: types.FETCH_TODOS_REQUEST },
-        { type: types.FETCH_TODOS_FAILURE, error: errorMessage },
-      ];
-
       api.fetchTodos.mockImplementationOnce(() => {
         throw expectedError;
       });
 
       await store.dispatch(actions.fetchTodos());
+
+      const expectedActions = [
+        { type: types.FETCH_TODOS_REQUEST },
+        { type: types.FETCH_TODOS_FAILURE, error: errorMessage },
+      ];
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
