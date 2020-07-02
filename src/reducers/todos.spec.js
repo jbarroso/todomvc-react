@@ -294,4 +294,65 @@ describe('todos reducer', () => {
       ],
     });
   });
+
+  it('should handle a REQUEST', () => {
+    expect(
+      todos(
+        {
+          loading: false,
+          todos: [
+            {
+              title: 'Run the tests',
+              completed: true,
+              id: 'foo',
+            },
+          ],
+        },
+        {
+          type: types.FETCH_TODOS_REQUEST,
+        }
+      )
+    ).toEqual({
+      loading: true,
+      todos: [
+        {
+          title: 'Run the tests',
+          completed: true,
+          id: 'foo',
+        },
+      ],
+    });
+  });
+
+  it('should handle a FAILURE', () => {
+    expect(
+      todos(
+        {
+          loading: true,
+          error: '',
+          todos: [
+            {
+              title: 'Run the tests',
+              completed: true,
+              id: 'foo',
+            },
+          ],
+        },
+        {
+          type: types.FETCH_TODOS_FAILURE,
+          error: 'error',
+        }
+      )
+    ).toEqual({
+      loading: false,
+      error: 'error',
+      todos: [
+        {
+          title: 'Run the tests',
+          completed: true,
+          id: 'foo',
+        },
+      ],
+    });
+  });
 });

@@ -13,8 +13,10 @@ import { areAllMarked } from '../selectors';
 import initialState from './initialState';
 
 export default function todos(state = initialState, action) {
-  const actionRequest = `${action.type}_REQUEST`;
-  const actionFailure = `${action.type}_FAILURE`;
+  const actionRequest =
+    action.type && action.type.endsWith('REQUEST') ? action.type : '';
+  const actionFailure =
+    action.type && action.type.endsWith('FAILURE') ? action.type : '';
 
   switch (action.type) {
     case actionRequest:
