@@ -1,83 +1,61 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 const ENTER_KEY = 13;
 
-class TodoTextInput extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: props.text || '',
-    };
+const TodoTextInput = ({
+  editing,
+  text: textProp,
+  placeholder,
+  onSave,
+  newTodo,
+}) => {
+  const [text, setText] = useState(textProp || '');
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-  }
+  const inputRef = useRef(null);
 
-  /**
-   * Safely manipulate the DOM after updating the state when invoking
-   * `this.props.onEdit()` in the `handleEdit` method above.
-   * For more info refer to notes at https://facebook.github.io/react/docs/component-api.html#setstate
-   * and https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate
-   */
-  componentDidUpdate(prevProps) {
-    const { editing } = this.props;
-    if (!prevProps.editing && editing) {
-      this.node.focus();
-      this.node.setSelectionRange(
-        this.node.value.length,
-        this.node.value.length
-      );
-    }
-  }
+  useLayoutEffect(() => {
+    const node = inputRef.current;
+    node.focus();
+    node.setSelectionRange(node.value.length, node.value.length);
+  }, [editing]);
 
-  handleSubmit(event) {
-    const text = event.target.value.trim();
-    const { onSave, newTodo } = this.props;
+  const handleSubmit = (event) => {
+    const textValue = event.target.value.trim();
     if (event.which === ENTER_KEY) {
-      onSave(text);
+      onSave(textValue);
       if (newTodo) {
-        this.setState({ text: '' });
+        setText('');
       }
     }
-  }
+  };
 
-  handleChange(event) {
-    this.setState({ text: event.target.value });
-  }
+  const handleChange = (event) => setText(event.target.value);
 
-  handleBlur(event) {
-    const { newTodo, onSave } = this.props;
+  const handleBlur = (event) => {
     if (!newTodo) {
       onSave(event.target.value);
     }
-  }
+  };
 
-  render() {
-    const { newTodo, placeholder } = this.props;
-    const { text } = this.state;
-    return (
-      <input
-        ref={(node) => {
-          this.node = node;
-        }}
-        className={classnames({
-          'new-todo': newTodo,
-          edit: !newTodo,
-        })}
-        type="text"
-        placeholder={placeholder}
-        autoFocus
-        value={text}
-        onBlur={this.handleBlur}
-        onChange={this.handleChange}
-        onKeyDown={this.handleSubmit}
-      />
-    );
-  }
-}
+  return (
+    <input
+      ref={inputRef}
+      className={classnames({
+        'new-todo': newTodo,
+        edit: !newTodo,
+      })}
+      type="text"
+      placeholder={placeholder}
+      autoFocus
+      value={text}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      onKeyDown={handleSubmit}
+    />
+  );
+};
 
 TodoTextInput.defaultProps = {
   text: '',
