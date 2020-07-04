@@ -1,5 +1,5 @@
 import React from 'react';
-import { action } from '@storybook/addon-actions';
+import { withRedux } from '../../.storybook/decorators';
 import Footer from './Footer';
 
 export default {
@@ -7,18 +7,30 @@ export default {
   component: Footer,
 };
 
-export const WithCompletedTodos = () => (
-  <Footer
-    count={10}
-    completedCount={4}
-    onClearCompleted={action('onClearCompleted')}
-  />
-);
+export const WithCompletedTodos = () => <Footer />;
+WithCompletedTodos.story = {
+  decorators: [
+    withRedux({
+      todos: {
+        todos: [
+          { id: 'foo', title: 'Todo1', completed: true },
+          { id: 'bar', title: 'Todo2', completed: false },
+        ],
+      },
+    }),
+  ],
+};
 
-export const WithoutCompletedTodos = () => (
-  <Footer
-    count={10}
-    completedCount={0}
-    onClearCompleted={action('onClearCompleted')}
-  />
-);
+export const WithoutCompletedTodos = () => <Footer />;
+WithoutCompletedTodos.story = {
+  decorators: [
+    withRedux({
+      todos: {
+        todos: [
+          { id: 'foo', title: 'Todo1', completed: false },
+          { id: 'bar', title: 'Todo2', completed: false },
+        ],
+      },
+    }),
+  ],
+};

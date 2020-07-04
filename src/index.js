@@ -9,7 +9,7 @@ import createSagaMiddleware from 'redux-saga';
 import * as serviceWorker from './serviceWorker';
 import reducer from './reducers';
 import saga from './sagas';
-import App from './containers/App';
+import App from './components/App';
 
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

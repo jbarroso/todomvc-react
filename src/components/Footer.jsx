@@ -1,11 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { clearCompleted } from '../actions';
+import { getCompletedTodoCount, getTodosCount } from '../selectors';
 
 import Utils from '../utils';
 
-const Footer = ({ count, completedCount, onClearCompleted }) => {
+const Footer = () => {
+  const count = useSelector(getTodosCount);
+  const completedCount = useSelector(getCompletedTodoCount);
+  const dispatch = useDispatch();
+
+  const onClearCompleted = () => dispatch(clearCompleted());
   const activeTodoWord = Utils.pluralize(count, 'item');
+
   let clearButton = null;
 
   if (completedCount > 0) {
@@ -49,12 +57,6 @@ const Footer = ({ count, completedCount, onClearCompleted }) => {
       {clearButton}
     </footer>
   );
-};
-
-Footer.propTypes = {
-  count: PropTypes.number.isRequired,
-  completedCount: PropTypes.number.isRequired,
-  onClearCompleted: PropTypes.func.isRequired,
 };
 
 export default Footer;
