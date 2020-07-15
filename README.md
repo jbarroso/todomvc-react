@@ -1,3 +1,33 @@
+# TodoMVC React
+
+## Docker
+
+### `docker-compose up`
+Runs the app in the development mode
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+### `docker-compose run --rm todomvc-front-app npm test`
+Launches the test runner in the interactive watch mode.<br />
+
+### `docker-compose -f docker-compose-nginx.yml up`
+Runs the app in the production mode
+Open [http://localhost](http://localhost) to view it in the browser.
+
+## Cypress with Docker
+
+### `docker-compose -f docker-compose.yml -f cypress/docker-compose-cypress.yml up --exit-code-from cypress`
+Runs Cypress e2e tests
+
+### `docker-compose -f docker-compose.yml -f cypress/docker-compose-cypress.yml -f cypress/docker-compose-cypress-open.yml up`
+Opens Cypress Test Runner
+
+## Storybook with Docker
+### `docker-compose -f docker-compose-storybook.yml up`
+Opens Storybook app
+Open [http://localhost:9009](http://localhost:9009) to view it in the browser.
+
+# React Create App
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

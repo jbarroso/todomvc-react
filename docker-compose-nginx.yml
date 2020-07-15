@@ -1,0 +1,13 @@
+version: '3.6'
+
+services:
+
+  todomvc-front-nginx:
+    build:
+      context: .
+      dockerfile: docker-conf/Dockerfile
+      target: nginx
+    expose:
+      - 80
+    ports:
+      - 80:80

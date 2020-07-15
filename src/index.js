@@ -1,12 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { BrowserRouter, Route } from 'react-router-dom';
+
+import { createStore, compose, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
+
 import * as serviceWorker from './serviceWorker';
+import reducer from './reducers';
+import saga from './sagas';
+import App from './components/App';
+
+/* eslint-disable no-underscore-dangle */
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+/* eslint-enable */
+
+const sagaMiddleware = createSagaMiddleware();
+const middleware = [sagaMiddleware];
+
+const store = createStore(
+  reducer,
+  composeEnhancers(applyMiddleware(...middleware))
+);
+
+sagaMiddleware.run(saga);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Route
+          path="/:nowShowing?"
+          render={(props) => <App nowShowing={props.match.params.nowShowing} />}
+        />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

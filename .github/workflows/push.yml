@@ -1,0 +1,11 @@
+name: TodoMVC React
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint
+        run: docker-compose run --rm todomvc-front-app npm run eslint
+      - name: Test
+        run: docker-compose -f docker-compose.yml -f cypress/docker-compose-cypress.yml up --exit-code-from cypress
